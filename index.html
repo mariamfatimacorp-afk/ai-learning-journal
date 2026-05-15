@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My AI Journey · Mariam Fatima · AIAP C10</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* ── Dark canvas ── */
+      --bg:        #0F0C07;
+      --bg2:       #181410;
+      --nav-bg:    rgba(12,9,5,0.94);
+      --grid:      rgba(210,148,15,0.035);
+
+      /* ── Light card surfaces ── */
+      --card:      #FDF8F0;
+      --card2:     #F6EEE0;
+      --cb:        #E8DECE;
+      --cb-h:      #C8840C;
+
+      /* ── Accent: warm amber / terracotta ── */
+      --a1:        #C8840C;
+      --a2:        #B85A20;
+      --glow:      rgba(200,132,12,0.18);
+      --at-dark:   #F0C060;   /* amber on dark bg */
+      --at-light:  #8A5808;   /* amber on light card */
+
+      /* ── Text: dark surfaces ── */
+      --td:        #F0E7D4;
+      --tmd:       #A89070;
+      --tfd:       #5A4A38;
+
+      /* ── Text: light card surfaces ── */
+      --tl:        #1C1510;
+      --tml:       #6A5640;
+      --tfl:       #9A8878;
+
+      /* ── Status ── */
+      --green:     #2C6E44;
+      --gbg:       rgba(44,110,68,0.09);
+      --gborder:   rgba(44,110,68,0.22);
+
+      --r:14px; --rs:8px;
+      --shadow:   0 8px 32px rgba(0,0,0,0.40);
+      --csh:      0 4px 20px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.10);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:var(--bg);color:var(--td);
+      line-height:1.6;-webkit-font-smoothing:antialiased;
+      min-height:100vh;overflow-x:hidden;
+    }
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                       linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+      background-size:52px 52px;
+    }
+    .orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
+    .o1{width:500px;height:500px;background:var(--a1);opacity:.10;top:-160px;right:-100px;}
+    .o2{width:380px;height:380px;background:var(--a2);opacity:.08;bottom:80px;left:-80px;}
+
+    /* ── NAV ── */
+    nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,132,12,0.12);}
+    .ni{max-width:1040px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+    .nl{display:flex;align-items:center;gap:11px;}
+    .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--a1),var(--a2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.78rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 0 18px var(--glow);}
+    .lname{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--td);}
+    .nbadge{font-size:.59rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--at-dark);background:rgba(200,132,12,0.1);border:1px solid rgba(200,132,12,0.25);padding:3px 10px;border-radius:100px;}
+    .nr2{display:flex;align-items:center;gap:8px;}
+    .sb{position:relative;display:flex;align-items:center;}
+    .sico{position:absolute;left:10px;color:var(--tfd);pointer-events:none;}
+    #si{width:185px;padding:7px 12px 7px 32px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--td);outline:none;transition:border .2s,box-shadow .2s,width .3s;}
+    #si::placeholder{color:var(--tfd);}
+    #si:focus{border-color:rgba(200,132,12,.5);box-shadow:0 0 0 3px var(--glow);width:230px;}
+
+    /* ── HERO ── */
+    .hero{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:80px 24px 64px;}
+    .ey{font-size:.68rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--at-dark);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+    .ey::before{content:'';width:24px;height:2px;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:2px;flex-shrink:0;}
+    h1{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-.025em;color:var(--td);margin-bottom:22px;}
+    .gr{background:linear-gradient(135deg,var(--a1) 0%,var(--a2) 55%,#D06040 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hdesc{font-size:1rem;font-weight:300;color:var(--tmd);max-width:540px;line-height:1.85;margin-bottom:36px;}
+    .cta{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;padding:12px 24px;border-radius:10px;border:none;cursor:pointer;box-shadow:0 4px 24px var(--glow);transition:transform .2s,box-shadow .2s;}
+    .cta:hover{transform:translateY(-2px);box-shadow:0 10px 40px var(--glow);}
+
+    /* ── STATS ── */
+    .stw{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 24px 52px;}
+    .stg{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;}
+    .stc{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:20px 22px;box-shadow:var(--csh);transition:border-color .2s,box-shadow .2s;animation:fu .5s ease backwards;}
+    .stc:hover{border-color:var(--cb-h);box-shadow:0 0 0 1px var(--cb-h),var(--csh);}
+    .stn{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:5px;}
+    .stl{font-size:.64rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--tml);}
+
+    /* ── PROGRESS BAR ── */
+    .progw{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 24px 40px;}
+    .prog-inner{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:18px 22px;box-shadow:var(--csh);}
+    .prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .prog-label{font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tml);}
+    .prog-pct{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--at-light);}
+    .prog-bar{height:6px;background:var(--card2);border-radius:100px;overflow:hidden;}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:100px;width:0%;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+
+    /* ── CONTROLS ── */
+    .ctrl{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 24px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+    .chips{display:flex;gap:6px;flex-wrap:wrap;}
+    .chip{font-size:.72rem;font-weight:500;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.03);color:var(--tmd);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
+    .chip:hover{border-color:rgba(200,132,12,.35);color:var(--at-dark);}
+    .chip.on{border-color:var(--a1);color:var(--at-dark);background:var(--glow);font-weight:600;}
+    #eab{font-size:.72rem;font-weight:500;color:var(--tfd);background:none;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:6px 14px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
+    #eab:hover{border-color:rgba(200,132,12,.35);color:var(--at-dark);}
+
+    /* ── SESSIONS ── */
+    .sessw{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 24px 24px;}
+    .slabel{font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--tfd);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+    .slabel::after{content:'';flex:1;height:1px;background:rgba(200,132,12,0.10);}
+    .slist{display:flex;flex-direction:column;gap:8px;margin-bottom:40px;}
+
+    /* ── CARD ── */
+    .card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);overflow:hidden;box-shadow:var(--csh);transition:border-color .2s,box-shadow .2s,transform .2s;animation:fu .35s ease backwards;}
+    .card:hover:not(.upcoming){border-color:var(--cb-h);box-shadow:0 0 0 1px var(--cb-h),var(--shadow);transform:translateY(-1px);}
+    .card.is-open{border-color:var(--a1)!important;box-shadow:0 0 0 1.5px var(--a1),0 8px 40px var(--glow)!important;transform:none!important;}
+    .card.upcoming{opacity:.4;pointer-events:none;}
+
+    /* card header */
+    .ch{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;}
+    .daynum{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-width:40px;line-height:1;flex-shrink:0;}
+
+    /* Badge slot in header */
+    .bslot{width:38px;height:38px;border-radius:50%;border:2px dashed var(--cb);background:var(--card2);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s;position:relative;title:'Upload your day badge';}
+    .bslot:hover{border-color:var(--a1);box-shadow:0 0 0 3px var(--glow);}
+    .bslot img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
+    .bslot .bp{font-size:.8rem;color:var(--tfl);pointer-events:none;line-height:1;}
+    .bslot.hb{border-style:solid;border-color:var(--a1);box-shadow:0 0 0 2px var(--glow);}
+
+    .cmeta{flex:1;min-width:0;}
+    .cdate{font-size:.62rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--tfl);margin-bottom:2px;}
+    .ctitle{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--tl);line-height:1.3;}
+    .csum{font-size:.76rem;font-weight:300;color:var(--tml);margin-top:3px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;}
+    .cr{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+    .tp{display:flex;gap:4px;}
+    @media(max-width:580px){.tp,.csum{display:none;}}
+    .tt{font-size:.6rem;font-weight:500;padding:2px 8px;border-radius:6px;background:rgba(200,132,12,0.09);color:var(--at-light);border:1px solid rgba(200,132,12,0.18);white-space:nowrap;}
+    .sp{font-size:.59rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;white-space:nowrap;}
+    .sp.completed{background:var(--gbg);color:var(--green);border:1px solid var(--gborder);}
+    .sp.upcoming{background:rgba(0,0,0,0.04);color:var(--tfl);border:1px solid var(--cb);}
+    .chv{width:15px;height:15px;color:var(--tfl);flex-shrink:0;transition:transform .25s cubic-bezier(.4,0,.2,1);}
+    .card.is-open .chv{transform:rotate(180deg);}
+
+    /* card body */
+    .cbody{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);}
+    .card.is-open .cbody{max-height:1100px;}
+    .cbi{border-top:1px solid var(--cb);padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+    @media(max-width:620px){.cbi{grid-template-columns:1fr;}}
+    .blk{display:flex;flex-direction:column;gap:7px;}
+    .bl{font-size:.61rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--tfl);}
+    .bt{font-size:.84rem;font-weight:300;color:var(--tml);line-height:1.75;}
+    .tags{display:flex;flex-wrap:wrap;gap:5px;}
+    .ctag{font-size:.65rem;font-weight:500;padding:3px 10px;border-radius:6px;background:rgba(184,90,32,0.09);color:#9A4818;border:1px solid rgba(184,90,32,0.18);}
+    .full{grid-column:1/-1;}
+    .tbox{grid-column:1/-1;background:linear-gradient(135deg,rgba(200,132,12,0.07),rgba(184,90,32,0.05));border:1px solid rgba(200,132,12,0.20);border-left:3px solid var(--a1);border-radius:10px;padding:16px 18px;}
+    .tbox .bl{color:var(--at-light);margin-bottom:5px;}
+    .tbox .bt{color:var(--tl);font-style:italic;}
+    .mc{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:var(--tml);background:rgba(0,0,0,0.04);border:1px solid var(--cb);padding:5px 12px;border-radius:100px;}
+    .mc b{color:var(--at-light);font-weight:500;}
+
+    /* Badge upload area (expanded) */
+    .badge-zone{
+      grid-column:1/-1;
+      display:flex;align-items:center;gap:16px;
+      background:rgba(200,132,12,0.05);
+      border:1.5px dashed rgba(200,132,12,0.25);
+      border-radius:10px;padding:16px 18px;
+    }
+    .blarge{
+      width:68px;height:68px;border-radius:50%;
+      border:2px dashed rgba(200,132,12,0.30);
+      background:rgba(200,132,12,0.06);
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;overflow:hidden;cursor:pointer;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .blarge:hover{border-color:var(--a1);box-shadow:0 0 0 3px var(--glow);}
+    .blarge img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
+    .blarge.hb{border-style:solid;border-color:var(--a1);box-shadow:0 0 0 2px var(--glow);}
+    .blarge .bico{font-size:1.4rem;pointer-events:none;}
+    .binfo{flex:1;}
+    .btitle{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--tl);margin-bottom:4px;}
+    .bsub{font-size:.74rem;font-weight:300;color:var(--tml);}
+    .ubtn{font-size:.72rem;font-weight:600;padding:7px 16px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s;flex-shrink:0;}
+    .ubtn:hover{opacity:.85;}
+
+    /* Hidden file inputs */
+    input[type=file]{display:none;}
+
+    /* no results */
+    .nores{text-align:center;padding:64px 24px;color:var(--tfd);font-size:.9rem;}
+
+    /* ── TOOLS ── */
+    .toolsw{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 24px 80px;}
+    .tgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+    .tblk{font-size:.77rem;font-weight:500;padding:7px 14px;border-radius:8px;background:var(--card);border:1px solid var(--cb);color:var(--tml);transition:all .15s;cursor:default;}
+    .tblk:hover{border-color:var(--cb-h);color:var(--at-light);}
+
+    /* ── FOOTER ── */
+    footer{position:relative;z-index:1;border-top:1px solid rgba(200,132,12,0.10);background:var(--nav-bg);backdrop-filter:blur(14px);}
+    .fi{max-width:1040px;margin:0 auto;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .fb{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--td);}
+    .fn{font-size:.7rem;color:var(--tfd);}
+    .btt{font-size:.7rem;color:var(--at-dark);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .15s;}
+    .btt:hover{color:var(--a1);}
+
+    @keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  </style>
+</head>
+<body>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="ni">
+      <div class="nl">
+        <div class="logo">MF</div>
+        <span class="lname">Mariam Fatima</span>
+        <span class="nbadge">AIAP C10 · Outskill</span>
+      </div>
+      <div class="nr2">
+        <div class="sb">
+          <svg class="sico" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="si" type="text" placeholder="Search sessions…">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="ey">14-Day AI Accelerator · Personal Learning Journal</p>
+    <h1>Everything I'm building,<br><span class="gr">session by session.</span></h1>
+    <p class="hdesc">A personal log of every day in the Outskill AI Accelerator Program — the tools I explored, the workflows I built, and the concepts that changed how I think about AI.</p>
+    <button class="cta" onclick="document.getElementById('anchor').scrollIntoView({behavior:'smooth'})">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      Explore Sessions
+    </button>
+  </section>
+
+  <!-- STATS -->
+  <div class="stw"><div class="stg" id="stg"></div></div>
+
+  <!-- PROGRESS -->
+  <div class="progw">
+    <div class="prog-inner">
+      <div class="prog-row">
+        <span class="prog-label">Sprint Progress</span>
+        <span class="prog-pct" id="progpct">0%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="progfill"></div></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="ctrl" id="anchor">
+    <div class="chips">
+      <button class="chip on" data-f="all">All Sessions</button>
+      <button class="chip" data-f="completed">Completed</button>
+      <button class="chip" data-f="upcoming">Coming Soon</button>
+    </div>
+    <button id="eab">Expand All</button>
+  </div>
+
+  <!-- SESSIONS -->
+  <div class="sessw">
+    <p class="slabel" id="dlabel">Completed Sessions</p>
+    <div class="slist" id="dlist"></div>
+    <p class="slabel" id="ulabel">Coming Soon</p>
+    <div class="slist" id="ulist"></div>
+    <div class="nores" id="nores" style="display:none">No sessions match — try different keywords.</div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="toolsw">
+    <p class="slabel">All Tools Covered</p>
+    <div class="tgrid" id="tgrid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="fi">
+      <div>
+        <div class="fb">Mariam Fatima</div>
+        <div class="fn">Interactive learning map · Outskill AIAP C10 · Started Apr 24, 2026</div>
+      </div>
+      <a class="btt" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        Back to top
+      </a>
+    </div>
+  </footer>
+
+<script>
+/* ─── SESSION DATA ─── */
+const SESSIONS = [
+  {
+    day:1, date:"Apr 24, 2026", status:"completed",
+    title:"LLMs, Meta-Prompting & RAG Systems",
+    summary:"Decoded the LLM black box, mastered meta-prompting, built a personal AI tutor in NotebookLM, and set up local LLMs.",
+    mentor:"Divij Bajaj — Microsoft M365 AI · 6+ years in ML & AI products",
+    tools:["ChatGPT","Claude","Gemini","NotebookLM","Ollama"],
+    concepts:["LLM Architecture","Meta-Prompting","RAG","Local LLMs","Hallucination Prevention"],
+    covered:"Explored how large language models actually work — from tokenization to next-token prediction. Decoded the 'black box' behind ChatGPT, Claude, and Gemini. Learned meta-prompting as the foundational technique behind all prompting strategies. Deep-dived into RAG (Retrieval Augmented Generation) — how to ground AI responses in your own knowledge base to prevent hallucinations. Set up local LLMs using Ollama to solve the privacy problem. Built a personal AI tutor in NotebookLM by uploading session transcripts.",
+    exercise:"Build your personal AI tutor in NotebookLM by uploading today's session transcript. Create one meta-prompt for a workflow you repeat daily. Test your RAG setup with 5 real questions and note where it succeeds vs. fails.",
+    takeaway:"RAG solves hallucination by anchoring the model to your knowledge base. Local LLMs solve privacy. Master both on Day 1 and everything you build on top becomes exponentially more reliable.",
+    next:"Add each new session transcript to your NotebookLM daily. By Day 14, you'll have a full AI mentor with all 14 sessions baked in."
+  },
+  {
+    day:2, date:"Apr 25, 2026", status:"completed",
+    title:"AI Content Creation — Video, Voice & Digital Clone",
+    summary:"Built a video & voice digital clone, learned the 10M dollar scripting formula, and mapped a complete AI content pipeline for Instagram/YouTube.",
+    mentor:"Uttam Gupta — Founder, AgentValley.ai · LinkedIn Top Creator · 170K+ followers",
+    tools:["HeyGen","WhisperFlow","Perplexity","Claude","ChatGPT","Kling 3.0","Seed Dance"],
+    concepts:["Hook Writing","AI Video Clone","Voice Synthesis","Content Pipeline","Viral Mechanics"],
+    covered:"Covered the complete Instagram and YouTube AI content workflow from idea to publishing. Learned the 3-part scripting formula: Hook (first 5-10 seconds — 70% of effort), Body (90% of script length), and CTA. Built a realistic digital video and voice clone using HeyGen. Used Perplexity for trend research and idea generation. Leveraged WhisperFlow for voice-to-text scripting. Studied how Outskill's AI content engine drives massive social media growth using a fully generative pipeline.",
+    exercise:"Create your AI voice clone in HeyGen. Write 3 hooks for content in your professional niche. Draft one complete short-form video script using Hook → Body → CTA and produce it.",
+    takeaway:"The workflow is the moat — not the individual tools. Hook → Script → Produce → Distribute. Master that pipeline and every new AI tool that launches just becomes another node you can plug in.",
+    next:"Post your first AI-assisted content piece on LinkedIn or Instagram. Share your clone in the Reflections channel."
+  },
+  {
+    day:3, date:"Apr 26, 2026", status:"completed",
+    title:"n8n Automation — Node-Based Workflow Foundations",
+    summary:"Set up n8n, learned node-based automation architecture, and built a first automated workflow from scratch on the canvas.",
+    mentor:"Akhil Kumar Alampally — AI Agent Developer & n8n Automation Expert",
+    tools:["n8n","Make.com","Zapier","OpenAI","Claude","Gemini"],
+    concepts:["Node-Based Automation","Triggers vs Actions","AI Nodes","Workflow Design","Agent Foundations"],
+    covered:"Introduced to automation through n8n — a visual, node-based tool with full real-time visibility over every workflow step. Compared n8n vs Make.com vs Zapier and understood why n8n is the right production-grade foundation. Learned the anatomy of any automation: triggers (what starts it) vs actions (what happens next). Explored three node types: AI nodes (OpenAI, Claude, Gemini), logical nodes, and data storage nodes. Built a working automation from scratch — from an empty canvas to a first triggered, running workflow.",
+    exercise:"Set up your n8n account. Build a simple workflow: form submission trigger → AI processing node → output response. Screenshot your first running automation and share it in the community.",
+    takeaway:"n8n's biggest advantage over managed tools is transparency — you can watch every node fire in real time. That visibility is what makes it the right foundation for production-grade AI agents you can actually trust.",
+    next:"Browse the n8n template library for inspiration. Identify one repetitive task in your work that you could automate with a simple 3-node workflow."
+  },
+  {
+    day:4, date:"Apr 27, 2026", status:"completed",
+    title:"Building AI Agents — RAG-Enabled Email Support in n8n",
+    summary:"Built a complete RAG-enabled email customer support agent in n8n — full architecture from knowledge base to automated reply.",
+    mentor:"Harshit Tyagi — Founder, Agentivize · 500K+ learners · 4.7+ rated courses",
+    tools:["n8n","OpenAI / GPT","Claude","Gemini","OpenRouter"],
+    concepts:["AI Agent Architecture","RAG in Agents","Memory & Context","Email Automation","LLM + Tools + Memory"],
+    covered:"Deep-dived into what truly defines an agent: LLM + tools + memory + loop — not just a chat interface. Understood why ChatGPT and Claude are already agents and how their architecture works under the hood. Built a complete RAG-enabled customer support agent in n8n: email trigger → knowledge base lookup → GPT response → auto-send. Explored how real D2C brands automate customer support, and how to rebuild that entire layer in n8n. Covered agent memory — how context is stored and passed across conversation turns.",
+    exercise:"Build a RAG-enabled support agent in n8n: email trigger → knowledge base (RAG) → AI-generated reply → auto-send. Use a topic you know deeply as your knowledge base. Add a human-approval step before the agent sends.",
+    takeaway:"Every modern AI product follows one architecture: LLM + tools + memory + loop. Internalize this pattern and you can reverse-engineer — and rebuild — any AI product you see in the market.",
+    next:"Test your agent on a real batch of sample emails. Add edge-case handling for out-of-scope questions. Document the architecture for your portfolio."
+  },
+  {
+    day:5, date:"Apr 28, 2026", status:"completed",
+    title:"MCP — Model Context Protocol & AI Connector Workflows",
+    summary:"Decoded MCP from first principles, connected live apps to Claude & ChatGPT, and built 3 end-to-end orchestration workflows.",
+    mentor:"Dileep Karri — Head of AI Initiatives, Outskill",
+    tools:["Claude","ChatGPT","Claude Desktop","OpenAI Codex","Canva MCP","Gmail MCP","Gamma MCP","Asana MCP","Expedia MCP","Booking.com","Granola","Context7","Kiwi.com","Zoho Books","Paper Design"],
+    concepts:["MCP Architecture","API vs Webhook vs MCP","Orchestration","Workflow Design","Problem→Task→Connector","Claude Desktop","AI Adoption Mindset"],
+    covered:"Demystified Model Context Protocol (MCP) — introduced by Anthropic, now the universal standard for connecting LLMs to external apps (like USB became the standard for hardware). Learned the key analogy: API = you check on the food yourself; Webhook = restaurant calls you when ready; MCP = a concierge collects everything on your behalf. Understood that the MCP Client is always the LLM (Claude, ChatGPT) and MCP Servers are external apps like Gmail, Canva, Notion, Asana. Covered Easy Mode (connecting apps inside Claude.ai and ChatGPT web) and Medium Mode (Claude Desktop + Node.js). Built 3 live orchestration workflows: (1) Flights + Hotels + Canva flyer in one prompt, (2) Gmail newsletter → summary → Gamma presentation, (3) Meeting notes via Granola → Asana tasks → 4-slide proposal on Gamma. Also saw a data analysis workflow using Context7 MCP server to build a live executive dashboard.",
+    exercise:"Connect Asana and Gamma connectors inside Claude. Build this workflow in one prompt: paste your meeting notes → extract action items → create tasks in Asana → generate a summary presentation in Gamma. Use sample meeting notes if you don't have real ones.",
+    takeaway:"Don't bolt AI onto your existing processes — re-imagine them from first principles. The magic of MCP isn't the connectors themselves, it's the orchestration: map your problem to tasks, tasks to connectors, then let the LLM coordinate everything. You are the judgment layer. AI is your co-pilot, not the autopilot.",
+    next:"Install Claude Desktop and Node.js. Explore the Connectors panel (click + in Claude) and identify 3 apps you already use daily that have MCP servers available. Design one workflow that would save you real time."
+  },
+    {
+    day:6, date:"Apr 29, 2026", status:"completed",
+    title:"Voice Agents + Vibe Coding",
+    summary:"Built a live voice AI agent on Retell AI with Cal.com booking, then shipped an MVP app using the EPB framework on Bolt.new with Supabase and Stripe.",
+    mentor:"Part 1 — Ashton Voss · Founder, Embotics AI · Brisbane, Australia | Part 2 — Cameron Sullivan · AI Entrepreneur · Vibe Coding Specialist",
+    tools:["Retell AI","Cal.com","N8N","Bolt.new","Supabase","Stripe","GitHub","OpenAI GPT-3.5 Turbo"],
+    concepts:["Voice AI Pipeline","5-Part Agent Prompt","Webhook Integration","EPB Framework","Moscow Method","PRD","Vibe Coding","CRUD Pattern"],
+    covered:"<b>Part 1 — Voice Agents (Ashton Voss)</b><br>Mapped the full Voice AI pipeline: Speech input → STT → LLM → TTS → audio output. Explored Retell AI for building voice agents without code. Learned the 5-part voice agent prompt structure: Role, Context, Personality, Task &amp; CoT Flow, and Function Guidelines. Built a live demo agent for Bright Smiles Dental that books appointments via Cal.com calendar integration. Connected an N8N post-call webhook to log outcomes to Google Sheets automatically.<br><br><b>Part 2 — Vibe Coding (Cameron Sullivan)</b><br>Introduced the leverage shift: non-coders can now build production apps by speaking requirements. Decoded 7 tech terms: frontend = dining room, backend = kitchen, database = pantry, API = waiter, authentication = reservation desk, deployment = opening night, env variables = speakeasy password. Learned the EPB framework: Explore, Plan (Moscow Method + PRD), Build (Bolt.new). Built a full project management app on Bolt.new: CRUD, Supabase database, user auth, AI task breakdown with GPT-3.5 Turbo, landing page, Stripe integration, custom domain, and GitHub.",
+    exercise:"Part 1: Build a voice agent on Retell AI using the 5-part prompt structure. Connect it to Cal.com and test a live booking flow. Part 2: Write a PRD using the Moscow Method, build an MVP on Bolt.new, and deploy it live within 24 hours.",
+    takeaway:"Voice agents and vibe coding are two sides of the same coin — both remove the technical barrier and let you build real products with ideas alone. The EPB framework and 5-part prompt structure give you a repeatable system that turns any problem into a shipped product.",
+    next:"Add your Retell AI voice agent to your portfolio. Share your Bolt.new MVP link in the Reflections channel. Document your PRD as a reusable template for future builds."
+  },
+  {
+    day:7, date:"Apr 30, 2026", status:"completed",
+    title:"Building AI Executive Assistants + Connecting the Dots",
+    summary:"Built Jerry — a multi-agent AI executive assistant for email, calendar, and meetings in N8N — and explored Vaibhav Sisinty's AI-first world framework.",
+    mentor:"Akhil Kumar Alampally · AI Agent Developer &amp; N8N Expert | Vaibhav Sisinty · AI Entrepreneur (Connecting the Dots)",
+    tools:["N8N","Fireflies.ai","Gmail","Google Calendar","OpenAI","LibreChat","OpenRouter"],
+    concepts:["Master Orchestrator Pattern","Single Responsibility Principle","Multi-Agent System","Context Window Memory","Information Arbitrage","Three-Horizon Framework","RAG-as-a-Service","AI Executive Assistant"],
+    covered:"<b>Session 1 — Building Jerry (Akhil Kumar Alampally)</b><br>Introduced Jerry: an AI Executive Assistant in N8N handling email, calendar, and meetings. LLM vs Agent: an LLM is a brain; an agent is brain + tools + memory + loop. Single Responsibility Principle: each sub-agent has one job, max 15-20 tools. Master Orchestrator pattern: one central agent delegates to specialist sub-agents. Built three sub-agents: Email Agent (GetMany, Send, CreateDraft, Delete, Reply), Calendar Agent (Create, GetMany, Update, Delete, CheckAvailability + Date/Time tool to fix model cutoff issues), and Meetings Agent (Fireflies.ai via HTTP Request/CURL for transcripts and summaries). Context window management is critical for long-running agents.<br><br><b>Session 2 — Connecting the Dots (Vaibhav Sisinty)</b><br>Information arbitrage: those who understand AI tools ahead of the curve capture outsized opportunities. Three-Horizon Framework: Horizon 1 (0-2 yrs) = defend your role; Horizon 2 (5-7 yrs) = become an orchestrator; Horizon 3 (10+ yrs) = abundance era. Practical opportunities explored: LibreChat + OpenRouter, RAG-as-a-Service, cloning-as-a-service, synthetic influencers, AI content production (ContentOS). YC framing: build full-stack AI companies that replace entire workflows, not just single tasks.<br><br><b>References:</b> Connecting the Dots by Vaibhav Sisinty — 35-page framework for navigating the AI-first world, covering opportunity mapping and the three-horizon roadmap.",
+    exercise:"Build all three Jerry sub-agents in N8N. Test full orchestration: ask Jerry in one message to summarise your emails, check your calendar, and pull the last meeting transcript. Apply the Three-Horizon Framework to map your career position and next action for each horizon.",
+    takeaway:"The Master Orchestrator pattern is the architecture behind every serious AI product: one intelligent coordinator plus focused specialists. Limit each agent to 15-20 tools, give each a single responsibility, and let the orchestrator handle complexity. Your job is to define the logic — the agents execute.",
+    next:"Add meeting recordings to Fireflies.ai so Jerry can pull real summaries. Map Vaibhav's three horizons to your situation and write one concrete action per horizon."
+  },
+  {
+    day:8, date:"May 1, 2026", status:"completed",
+    title:"Claude Code Mastery — Part 1",
+    summary:"Built a Studio Ghibli-themed CRM app from a 3-line prompt in 8 minutes, discovered the Skills.sh ecosystem, and learned the PRD-to-product workflow inside Claude Code.",
+    mentor:"Akshat Bahety · Head of AI Innovations, EDECO Group · Ships AI products to 50,000+ users across 60 countries",
+    tools:["Claude Code","Claude Desktop","Claude Pro","Skills.sh","ChatGPT Projects"],
+    concepts:["Claude Code vs Lovable/Bolt","Skills as Instructions","PRD Workflow","Bypass Permissions","Frontend Design Skill","Prompt-to-Product","AI-Powered Development"],
+    covered:"Opened Week 2 with a deep introduction to Claude Code — Anthropic's agentic coding environment. Key distinction: Claude Code was built for engineers first (more power, full file access) but is now accessible to non-coders. Included in the $20/month Claude Pro plan alongside Cowork and Design. Live demo: built a full CRM web app — pipeline stages, email input, invoice creation, dark mode, Studio Ghibli colour palette — from a 3-line prompt in under 8 minutes. Claude Code vs Lovable/Bolt: Claude operates locally on your machine, gives full file control, and has daily usage caps rather than per-message limits. Introduced Skills.sh — a marketplace of 91,000+ skills (structured instruction sets for Claude Code). Demonstrated PRD Skill (Product Requirements Document) to turn vague ideas into structured specs, and Frontend Design Skill to upgrade visual quality. Bypass Permissions mode: telling Claude to trust itself and do the job without interruptions. Full PRD workflow: raw idea → basic prompt → Claude generates PRD → Claude builds to the spec. The PRD bridges the gap between a vague prompt and a great app.",
+    exercise:"Open Claude Code (Code tab in Claude Desktop). Write a 3-line prompt for an app you need and enable Bypass Permissions. Then go to Skills.sh, install the PRD skill, and re-run your project with a proper requirements document. Compare the two outputs.",
+    takeaway:"Claude Code is not a chatbot — it's an autonomous developer running on your machine. The skill + PRD combo is the unlock: a skill teaches Claude how to work, a PRD tells it what to build. Together they turn a vague idea into a production-ready app without writing a single line of code.",
+    next:"Install Claude Desktop and activate Claude Code. Explore Skills.sh and install at least two relevant skills (PRD + one domain-specific skill). Build one real app you've been putting off — use the PRD skill to spec it properly first."
+  },
+  {
+    day:9, date:"May 2, 2026", status:"completed",
+    title:"Claude Cowork — Computer Use & Autonomous Agents",
+    summary:"Watched Claude Cowork autonomously take over a laptop to build an earnings analysis dashboard — the feature that rattled global IT stocks — and learned how to harness it safely.",
+    mentor:"Akshat Bahety · Head of AI Innovations, EDECO Group",
+    tools:["Claude Cowork","Claude Desktop","Claude Pro","Opus 4.6"],
+    concepts:["Computer Use","Local File Access","Context Window Limits","Earnings Analysis","Cowork vs Code vs Chat","Folder-Scoped Access","AI Agent Autonomy"],
+    covered:"Deep-dived into Claude Cowork — the feature that triggered a global IT stock sell-off when launched, as investors realised AI could autonomously operate computers and replace analyst roles. Hierarchy: Chat requires you to provide everything; Code builds files on your machine; Cowork actually operates your computer — opening browsers, reading files, debugging errors live, completing multi-step tasks without any human input. Context window advantage: Cowork has a significantly larger context window than Claude Chat. Live demo: gave Cowork a folder of company earnings reports with a single prompt — 'build me a stock analysis dashboard.' Claude autonomously opened Chrome, debugged a file access issue it encountered, and delivered a working interactive dashboard — entirely without intervention. Security best practice: always grant Cowork access only to a specific named folder (e.g. Claude Playground), not your full computer. One conversation, many tasks: continue assigning tasks in the same chat. Practical tip: one task per chat; start a new conversation when context limits are hit. Hosted a live Q&A session answering 84 cohort questions on Cowork use cases, pricing, and integration options.",
+    exercise:"Open Claude Cowork. Create a folder called Claude Playground and put 3-5 documents inside. Grant Cowork access only to that folder. Give it one prompt to analyse the files and produce a formatted output. Observe the autonomous process, then try a second task in the same chat.",
+    takeaway:"Claude Cowork is the clearest demonstration that AI can replace entire job functions, not just assist them. Scoped access and clear intent are your only controls: give it a specific folder, a specific goal, and let it work. Your role shifts from doing the task to reviewing the output.",
+    next:"Identify one real repetitive analysis task in your work. Set up a dedicated folder and test whether Cowork can handle the full workflow in a single prompt."
+  },
+  {
+    day:10, date:"May 3, 2026", status:"completed",
+    title:"Advanced MCPs — Marketplaces, Skills & Custom Servers",
+    summary:"Navigated Smithery and MCP Market, evaluated and installed external MCP servers, built a custom MCP server from scratch, and set up a Gmail AI assistant via N8N MCP.",
+    mentor:"Dileep Karri · Head of AI Initiatives, Outskill · MCP &amp; Automation Expert",
+    tools:["Smithery","MCP Market","Claude Code","OpenAI Codex","N8N","Claude Desktop","Gmail MCP"],
+    concepts:["MCP Marketplaces","Skills vs MCPs Analogy","Custom MCP Server","Carpenter Analogy","Chef Analogy","MCP Installation","Rating-Based Selection","Gmail AI Assistant"],
+    covered:"Revisited Skills vs MCPs with two analogies: Carpenter (skill = the process of building furniture; MCP = the saw, hammer, tape) and Chef (skill = the recipe; MCP = the knife, wok, pressure cooker). Core rule: skill = playbook (how), MCP = instrument (what). Both are required — without the recipe, perfect tools produce bad results; without tools, the recipe is useless. Two authoritative MCP marketplaces: Smithery (free login, thousands of servers with usage signals — like Amazon reviews) and MCP Market (alternative discovery catalogue). Evaluation criteria: community usage, ratings, documentation quality, author reputation. Walked through installation of external MCP servers into Codex and Claude Code. Covered high-value recommended servers. Final section: custom MCP server creation — when no existing server meets your needs, you build your own using Claude Code or Codex. A custom server exposes tools to Claude exactly like any marketplace server. N8N MCP guide: build a Gmail AI Assistant using N8N as an MCP server trigger, connect Gmail actions (Send, Draft, GetEmails), and control your inbox through Claude Desktop in natural language.<br><br><b>References:</b> Build Your Gmail AI Assistant with N8N MCP + Claude Desktop — step-by-step workshop covering MCP setup, N8N workflow configuration, and Gmail integration.",
+    exercise:"Browse Smithery for MCPs relevant to your tools. Install at least two into Claude Code. Follow the N8N MCP guide: create an N8N workflow with MCP Server Trigger, add Gmail tools (Send, Draft, GetEmails), connect to Claude Desktop, and test by asking Claude to read and reply to an email in natural language.",
+    takeaway:"The skill is your playbook; the MCP is your toolkit. Both are required. When no MCP exists for your use case, you can build one — using Claude Code to do the heavy lifting. The real unlock is combining skills and MCPs to create orchestrated real-world AI systems that go far beyond chat.",
+    next:"Map your daily tools to available MCP servers on Smithery. Build your Gmail AI assistant using the N8N MCP guide. Identify one workflow where a custom MCP server would add the most value."
+  },
+  {
+    day:11, date:"May 4, 2026", status:"completed",
+    title:"N8N as Backend + GitHub for Collaboration",
+    summary:"Mastered API vs Webhook, wired a Bolt.new frontend to an N8N backend via webhook, set up GitHub for team collaboration, and kicked off the 48-hour Hackathon.",
+    mentor:"Jitesh Dugar · Founder, MediaJade · Zoho Partner · Automation &amp; Workflow Mentor",
+    tools:["N8N","GitHub","Bolt.new","Lovable","Webhook"],
+    concepts:["API vs Webhook","Event-Based Architecture","Frontend-Backend Integration","Webhook URL","POST vs GET","GitHub Repository","Version Control","Hackathon Kickoff"],
+    covered:"Opened with the API vs Webhook distinction through a vivid analogy: API = you keep calling the restaurant to check if your order is ready (you initiate every request); Webhook = the restaurant calls you when something happens (server-initiated, event-based). Webhook properties: a URL endpoint, optional authentication, and a payload format — POST sends data, GET retrieves it. N8N as backend: add a Webhook trigger node, copy the URL, and have a Bolt.new or Lovable frontend POST to it when a user action occurs. This turns any N8N automation (Jerry, email agents, etc.) into a proper product with a real user interface. GitHub as team collaboration: a repository is like Google Drive for code — multiple people push changes, branches, and pull requests simultaneously. Hackathon kickoff: teams assigned to WhatsApp groups and breakout rooms. Teams introduced themselves, reviewed the Hackathon brief from the Handbook, shortlisted product ideas, and divided tasks for the 48-hour sprint.<br><br><b>References:</b> Building Loveable Interfaces workshop guide — principles for designing high-quality UI in Lovable and Bolt.new.",
+    exercise:"In N8N, add a Webhook trigger node and copy the URL. In Bolt.new, build a form that POSTs user input to that URL. Verify data arrives in N8N. Add an AI processing step and return a response to the frontend. Create a GitHub repo and push your Hackathon project there.",
+    takeaway:"The frontend-backend split turns an N8N automation into a real product. Bolt.new gives you the UI; N8N gives you the intelligence; webhooks are the bridge — event-based, lightweight, and simple to wire. Add GitHub and you have a full team-capable production stack.",
+    next:"Wire your Hackathon project: UI in Lovable or Bolt.new, connected to N8N via webhook, code pushed to GitHub. Focus on one working end-to-end flow before adding features."
+  },
+  {
+    day:12, date:"May 5, 2026", status:"completed",
+    title:"Anti-Gravity — AI-Powered IDE (Advanced Vibe Coding)",
+    summary:"Discovered Anti-Gravity, Google's local AI IDE built on VS Code, used it with Gemini to build a real dashboard, scraped websites with FireCrawl, and shipped open-source skills — all without code.",
+    mentor:"Harshith Vaddiparthy · Head of Growth, JustPaid (YC-backed) · Karshat Ventures · Forbes Technical Contributor",
+    tools:["Anti-Gravity","Gemini","FireCrawl","ShadCN","VS Code","GitHub"],
+    concepts:["AI IDE","Local Development","Advanced Vibe Coding","Web Scraping","Markdown Conversion","Open-Source Skills","ShadCN UI Components","Production-Grade Apps"],
+    covered:"Introduced Anti-Gravity as a fundamentally different category: Lovable and Bolt are cloud-based web apps; Anti-Gravity is a full AI IDE that runs on your local machine (built on VS Code) powered by Google's Gemini. It gives you the full power of a professional developer environment with AI writing all the code — production-grade output, not just MVPs. Lovable/Bolt = dining table (interact with the finished product); Anti-Gravity = the kitchen (control every ingredient). Interface: Gemini-powered chat panel, file explorer, code editor, and terminal — all in one window. Skill installation inside Anti-Gravity: the same markdown skills from Skills.sh work here, giving your IDE a personal playbook. Live build: constructed a real dashboard from scratch in natural language, using ShadCN UI components for high-quality accessible design. Introduced FireCrawl: a web scraping tool that converts any website into clean markdown — perfect for competitive intelligence and AI workflow data. Open-source approach: all project files pushed to a public GitHub repo for the cohort to clone and build on. Key insight: Harshith is a non-coder and Head of Growth at a YC-backed startup who ships all his internal tools with Anti-Gravity — including an autonomous AI newsletter that generates revenue.",
+    exercise:"Download Anti-Gravity. Build something simple first (to-do app, dashboard) in natural language. Install a skill from Skills.sh inside Anti-Gravity. Use FireCrawl to scrape a website in your industry and convert it to markdown. Push everything to a GitHub repo.",
+    takeaway:"Anti-Gravity removes the last remaining barrier between your idea and a production-grade app. Lovable is for rapid prototyping; Anti-Gravity is your production shipyard. Gemini's power, local file access, and skills give you an autonomous development partner you can direct entirely in plain English.",
+    next:"Set up Anti-Gravity locally and run your first full build. Use FireCrawl on 3 websites in your industry, convert outputs to markdown, and feed them into NotebookLM for competitive research. Open-source at least one project on GitHub."
+  },
+  {
+    day:13, date:"May 6, 2026", status:"completed",
+    title:"OpenClaw — Agentic AI Runtime & Personal AI Assistant",
+    summary:"Learned what OpenClaw really is (a runtime for agents, not an agent itself), explored proactive personal AI assistant architecture, and why OpenAI hired OpenClaw's founder to lead their own assistant initiative.",
+    mentor:"Sukin Shetty · AI Systems Builder · Helping Businesses Build Real AI Systems",
+    tools:["OpenClaw","Hostinger","VPS"],
+    concepts:["Agentic AI Runtime","Runtime vs Agent","Personal AI Assistant","Proactive Agents","VPS Deployment","Autonomous Agents","Agent Architecture","OpenClaw History"],
+    covered:"Critical clarification: OpenClaw is not an agent — it is a runtime for agents. A runtime is an operating system or environment where agents live. You build the agent; OpenClaw provides the infrastructure, tools, memory, and execution environment. This changes how you think about building with it. History: originally named ClaudeBot (Anthropic requested a name change), briefly MaltBot, finally OpenClaw. OpenAI recognised its significance by hiring founder Peter to lead their personal assistant initiative — signalling that proactive personal AI assistants are AI's next frontier. Google is building Remy; OpenAI is building their own. The paradigm shift: before OpenClaw, AI was reactive — you prompted it, it responded. With agentic systems, AI becomes proactive — it monitors conditions and acts without being asked. This is the trend Andrej Karpathy (who coined Vibe Coding) calls the defining direction of the year. Two deployment paths: one-click managed hosting via Hostinger, and advanced VPS setup for full control. Making agents smarter: memory management, tool selection, model choice, and context strategies. Live demos showed OpenClaw agents monitoring data and initiating actions autonomously — the architecture Sukin is using to build enterprise-grade autonomous systems.",
+    exercise:"Research OpenClaw and set up a basic instance via Hostinger's one-click option. Define what your personal AI assistant should do proactively — monitor inbox, summarise daily news, track a key metric. Design the agent's memory and tool list. Categorise your tasks as reactive (you ask) vs proactive (agent acts automatically).",
+    takeaway:"OpenClaw represents AI's next phase: agents that don't wait for prompts. The runtime vs agent distinction is the key insight — OpenClaw gives your agent a home, tools, and memory, but you define its purpose. Proactive autonomous assistants are coming for every professional role. The winning position is building them.",
+    next:"Explore OpenClaw architecture documentation and model selection trade-offs. Review Hostinger's managed plans for a low-friction first deployment. Start defining the persona and tool list for your own personal AI assistant."
+  },
+  {
+    day:14, date:"May 7, 2026", status:"completed",
+    title:"Graduation: Monetisation Masterclass + Hackathon Demo Day",
+    summary:"Learned Cameron Sullivan's playbook for landing the first paying client with AI skills, celebrated cohort achievements, and watched the top 3 Hackathon teams demo live — Travel Itinerary Planner took first place.",
+    mentor:"Cameron Sullivan · 22-year-old AI Entrepreneur · Built a 6-figure AI agency in 6 months · Former pizza delivery driver turned AI founder",
+    tools:["Cold Email Automation","AI Agency Stack","Voice Agents","N8N Workflows","Bolt.new"],
+    concepts:["Value Equation","Two Lanes Model","Skills-to-Solutions Mapping","Market Validation","Founding Client Program","Sell Outcomes Not Features","7-Day Challenge","SaaS vs Service","Cold Outreach"],
+    covered:"<b>Monetisation Masterclass — From Skills to Your First Dollar (Cameron Sullivan)</b><br>Cameron's story: CS student delivering pizza for Domino's, discovered ChatGPT 3.5 in 2023, realised 40-hour assignments now took 2 hours, hit his revenue goal by end of summer, dropped out, built a six-figure AI agency in 6 months, and now serves companies doing $10M/month. Three ways to make businesses money with AI: (1) Drive revenue directly — introduce new money that didn't exist before (e.g. a cold email engine booking 30-50 qualified appointments per month; each deal worth $20-50K); (2) Save time — turn 8 hours of manual processing into 1 hour, saving $21,000/month; (3) Reduce risk and errors — AI compliance checks in healthcare/legal/finance reduce error rates to near zero. Most important rule: sell outcomes, not features. Two lanes: Lane 1 = build AI systems into businesses (discovery call, find the constraint, build the system, deliver measurable results — for technical builders); Lane 2 = run a traditional business powered by AI (marketing, copywriting, content — AI multiplies output 10x, client never sees the engine). Skills-to-Solutions mapping: match these 14 days of skills to specific industries at $3,000-$7,000+ per project. Market validation in 30 minutes: validate before building. The Value Equation: four variables behind every purchasing decision. Founding Client Program: get the first client without a portfolio. The exact outreach message Cameron used to book his first $5,000 client while still delivering pizza. 7-Day Challenge: daily action plan to go from skills to paying client within one week.<br><br><b>Hackathon Demo Day — Top 3 Winners</b><br>3rd Place: Jobify (Group 43) — AI-powered job search and application assistant. 2nd Place: DIY Repair Assistant (Group 63) — voice + vision AI guide for home repairs. 1st Place: Travel Itinerary Planner (Group 74) — end-to-end AI travel planning with live booking integration.<br><br><b>References:</b> Day 14 Session Post-Reads — full summary of all monetisation frameworks, Cameron's journey, Skills-to-Solutions map, and Hackathon judging criteria.",
+    exercise:"Complete the 7-Day Challenge: Day 1 — pick niche and lane; Day 2 — define offer in outcome terms; Day 3 — validate with 5 conversations; Day 4 — write outreach message; Day 5 — send 20 cold messages; Day 6 — follow up; Day 7 — make your first offer. Use the Skills-to-Solutions map to match your strongest skill to a specific industry and price point.",
+    takeaway:"The skills built over these 14 days are worth $3,000-$7,000+ per project to the right business owner. The gap between having AI skills and having a paying client is simply framing: stop selling features, start selling outcomes. Pick one lane, one niche, make one offer this week.",
+    next:"Choose your lane and niche. Write your first outreach message using Cameron's template. Send it to 10 people this week. Upload all 14 session transcripts to your NotebookLM — your AI tutor now has complete context of everything you built in these 14 days."
+  },
+];
+
+/* ─── BADGE COLORS (Outskill palette per day) ─── */
+const BADGE_COLORS = [
+  null,                         // 0 unused
+  ['#C8C8C8','#787878'],        // Day 1  Silver
+  ['#C89060','#7A4A28'],        // Day 2  Copper
+  ['#C8A830','#806010'],        // Day 3  Dark Gold
+  ['#60B8E8','#2060A0'],        // Day 4  Ice Blue
+  ['#E8C030','#908000'],        // Day 5  Warm Gold
+  ['#B0D028','#607008'],        // Day 6  Lime Green
+  ['#78C068','#286030'],        // Day 7  Green
+  ['#F0C800','#987800'],        // Day 8  Bright Gold
+  ['#C8A060','#786030'],        // Day 9  Tan Bronze
+  ['#A870D8','#502890'],        // Day 10 Purple
+  ['#70D880','#207838'],        // Day 11 Mint
+  ['#C89090','#784040'],        // Day 12 Rose Gold
+  ['#E060B8','#801068'],        // Day 13 Pink
+  ['#90E020','#407800'],        // Day 14 Neon Green
+];
+
+function generateBadgeSVG(day) {
+  const cols = BADGE_COLORS[day] || ['#C8840C','#8A4808'];
+  const c1 = cols[0], c2 = cols[1];
+  const fs = day >= 10 ? 24 : 28;
+  const gid = 'bg' + day;
+  const svg = `<svg viewBox="0 0 140 108" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wg${day}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="${c1}"/>
+      <stop offset="100%" stop-color="${c2}"/>
+    </linearGradient>
+    <radialGradient id="hg${day}" cx="42%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#3C3028"/>
+      <stop offset="100%" stop-color="#0F0C08"/>
+    </radialGradient>
+    <filter id="gs${day}" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="b"/>
+      <feComposite in="SourceGraphic" in2="b" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Drop shadow -->
+  <polygon points="103,54 86,24 54,24 37,54 54,84 86,84" fill="rgba(0,0,0,0.4)" transform="translate(2,3)"/>
+  <!-- Wing left - 3 layered bars tapering upward -->
+  <rect x="3"  y="52" width="30" height="7" rx="3.5" fill="url(#wg${day})"/>
+  <rect x="7"  y="42" width="24" height="6" rx="3"   fill="url(#wg${day})" opacity="0.9"/>
+  <rect x="12" y="33" width="18" height="5" rx="2.5" fill="url(#wg${day})" opacity="0.75"/>
+  <!-- Wing right -->
+  <rect x="107" y="52" width="30" height="7" rx="3.5" fill="url(#wg${day})"/>
+  <rect x="109" y="42" width="24" height="6" rx="3"   fill="url(#wg${day})" opacity="0.9"/>
+  <rect x="110" y="33" width="18" height="5" rx="2.5" fill="url(#wg${day})" opacity="0.75"/>
+  <!-- Hex outer glow ring -->
+  <polygon points="106,54 88,22 52,22 34,54 52,86 88,86" fill="${c2}" opacity="0.35"/>
+  <!-- Hex colored border -->
+  <polygon points="104,54 87,25 53,25 36,54 53,83 87,83" fill="none" stroke="${c1}" stroke-width="3.5"/>
+  <!-- Hex dark body -->
+  <polygon points="100,54 84,28 56,28 40,54 56,80 84,80" fill="url(#hg${day})"/>
+  <!-- Inner gloss highlight -->
+  <ellipse cx="70" cy="38" rx="17" ry="9" fill="rgba(255,255,255,0.06)"/>
+  <!-- Day number -->
+  <text x="70" y="57" text-anchor="middle" dominant-baseline="middle"
+    font-family="Arial Black,Impact,Helvetica,sans-serif"
+    font-size="${fs}" font-weight="900" fill="${c1}">${day}</text>
+</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+/* ─── BADGE HELPERS (localStorage + generated fallback) ─── */
+function saveBadge(day, dataUrl) {
+  try { localStorage.setItem('badge-'+day, dataUrl); } catch(e){}
+}
+function getBadge(day) {
+  try {
+    const stored = localStorage.getItem('badge-'+day);
+    return stored || generateBadgeSVG(day);
+  } catch(e){ return generateBadgeSVG(day); }
+}
+function hasUploadedBadge(day) {
+  try { return !!localStorage.getItem('badge-'+day); } catch(e){ return false; }
+}
+function resizeAndSave(file, day, cb) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const max = 220;
+      let w = img.width, h = img.height;
+      if (w > max || h > max) {
+        if (w > h) { h = Math.round(h * max / w); w = max; }
+        else { w = Math.round(w * max / h); h = max; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      saveBadge(day, dataUrl);
+      cb(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function updateBadgeDisplay(day, dataUrl) {
+  // Update small slot in card header
+  const smallSlot = document.querySelector(`.bslot[data-day="${day}"]`);
+  if (smallSlot) {
+    smallSlot.innerHTML = `<img src="${dataUrl}" alt="Badge">`;
+    smallSlot.classList.add('hb');
+  }
+  // Update large slot in expanded body
+  const largeSlot = document.querySelector(`.blarge[data-day="${day}"]`);
+  if (largeSlot) {
+    largeSlot.innerHTML = `<img src="${dataUrl}" alt="Badge">`;
+    largeSlot.classList.add('hb');
+    // Update button text
+    const btn = largeSlot.parentElement.querySelector('.ubtn');
+    if (btn) btn.textContent = 'Change Badge';
+  }
+  // Update stats
+  updateBadgeCount();
+}
+function updateBadgeCount() {
+  const count = SESSIONS.filter(s => s.status === 'completed' && getBadge(s.day)).length;
+  const el = document.getElementById('badge-stat');
+  if (el) el.textContent = count;
+}
+function triggerUpload(day) {
+  const input = document.getElementById('fi-'+day);
+  if (input) input.click();
+}
+
+/* ─── STATS ─── */
+const done = SESSIONS.filter(s => s.status === 'completed');
+const allT = [...new Set(SESSIONS.flatMap(s => s.tools))];
+const allC = [...new Set(SESSIONS.flatMap(s => s.concepts))];
+const badgeCount = done.length; // all completed days have generated badges
+const pct = Math.round(done.length / 14 * 100);
+
+const statsData = [
+  { id:'', n: done.length, l:'Days Completed' },
+  { id:'', n: 14,          l:'Total Sessions'  },
+  { id:'', n: allT.length, l:'Tools Explored'  },
+  { id:'', n: allC.length, l:'Key Concepts'    },
+  { id:'badge-stat', n: badgeCount, l:'Badges Earned' },
+];
+const stg = document.getElementById('stg');
+statsData.forEach((s,i) => {
+  const d = document.createElement('div');
+  d.className = 'stc'; d.style.animationDelay = i*65+'ms';
+  d.innerHTML = `<div class="stn"${s.id ? ` id="${s.id}"`:''} style="animation-delay:${i*65+150}ms">${s.n}</div><div class="stl">${s.l}</div>`;
+  stg.appendChild(d);
+});
+
+// Progress bar
+document.getElementById('progpct').textContent = pct + '%';
+setTimeout(() => { document.getElementById('progfill').style.width = pct + '%'; }, 400);
+
+/* ─── TOOLS GRID ─── */
+const tg = document.getElementById('tgrid');
+allT.forEach(t => { tg.innerHTML += `<div class="tblk">${t}</div>`; });
+
+/* ─── RENDER CARD ─── */
+function renderCard(s, idx) {
+  const up = s.status === 'upcoming';
+  const badge = !up ? getBadge(s.day) : null;
+  const badgeHtml = badge
+    ? `<img src="${badge}" alt="Badge">`
+    : `<span class="bp">🏅</span>`;
+  const badgeLargeHtml = badge
+    ? `<img src="${badge}" alt="Badge">`
+    : `<span class="bico">🏅</span>`;
+
+  return `
+  <div class="card ${up?'upcoming':''}" style="animation-delay:${idx*28}ms"
+       data-s="${s.status}"
+       data-q="${(s.title+' '+s.tools.join(' ')+' '+s.concepts.join(' ')).toLowerCase()}">
+
+    <!-- Hidden file input for this day -->
+    ${!up ? `<input type="file" id="fi-${s.day}" accept="image/*" onchange="handleUpload(event,${s.day})">` : ''}
+
+    <div class="ch" onclick="toggle(this)">
+      <div class="daynum">${String(s.day).padStart(2,'0')}</div>
+
+      <!-- Badge slot (small, in header) -->
+      ${!up ? `
+      <div class="bslot${badge?' hb':''}" data-day="${s.day}"
+           onclick="event.stopPropagation();triggerUpload(${s.day})"
+           title="Upload your day badge">
+        ${badgeHtml}
+      </div>` : ''}
+
+      <div class="cmeta">
+        <div class="cdate">${s.date}</div>
+        <div class="ctitle">${s.title}</div>
+        ${!up ? `<div class="csum">${s.summary}</div>` : ''}
+      </div>
+      <div class="cr">
+        ${!up && s.tools.length ? `
+          <div class="tp">
+            ${s.tools.slice(0,3).map(t=>`<span class="tt">${t}</span>`).join('')}
+            ${s.tools.length>3 ? `<span class="tt">+${s.tools.length-3}</span>` : ''}
+          </div>` : ''}
+        <span class="sp ${s.status}">${s.status==='completed'?'Done':'Soon'}</span>
+        ${!up ? `<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>` : ''}
+      </div>
+    </div>
+
+    ${!up ? `
+    <div class="cbody">
+      <div class="cbi">
+
+        <!-- Badge upload zone (large, in expanded body) -->
+        <div class="badge-zone">
+          <div class="blarge${badge?' hb':''}" data-day="${s.day}"
+               onclick="triggerUpload(${s.day})" title="Upload badge">
+            ${badgeLargeHtml}
+          </div>
+          <div class="binfo">
+            <div class="btitle">Day ${s.day} Achievement Badge</div>
+            <div class="bsub">Upload your Outskill certificate or badge for this session. Stored in your browser.</div>
+          </div>
+          <button class="ubtn" onclick="triggerUpload(${s.day})">${badge?'Change Badge':'Upload Badge'}</button>
+        </div>
+
+        ${s.mentor ? `<div class="blk full"><div class="bl">Mentor</div><span class="mc">👤 <b>${s.mentor}</b></span></div>` : ''}
+
+        <div class="blk">
+          <div class="bl">What We Covered</div>
+          <div class="bt">${s.covered}</div>
+        </div>
+
+        <div class="blk">
+          <div class="bl">Tools Used</div>
+          <div class="tags">${s.tools.map(t=>`<span class="tt" style="font-size:.68rem;padding:4px 10px">${t}</span>`).join('')}</div>
+          ${s.concepts.length ? `
+            <div class="bl" style="margin-top:10px">Key Concepts</div>
+            <div class="tags">${s.concepts.map(c=>`<span class="ctag">${c}</span>`).join('')}</div>` : ''}
+        </div>
+
+        <div class="blk full">
+          <div class="bl">Practice Exercise</div>
+          <div class="bt">${s.exercise}</div>
+        </div>
+
+        <div class="tbox">
+          <div class="bl">💡 Key Takeaway</div>
+          <div class="bt">${s.takeaway}</div>
+        </div>
+
+        ${s.next ? `<div class="blk full"><div class="bl">→ Next Steps</div><div class="bt">${s.next}</div></div>` : ''}
+      </div>
+    </div>` : ''}
+  </div>`;
+}
+
+/* ─── UPLOAD HANDLER ─── */
+function handleUpload(event, day) {
+  const file = event.target.files[0];
+  if (!file) return;
+  resizeAndSave(file, day, dataUrl => { updateBadgeDisplay(day, dataUrl); });
+  event.target.value = '';
+}
+
+/* ─── RENDER LIST ─── */
+function render(f='all', q='') {
+  const filtered = SESSIONS.filter(s => {
+    const fOk = f === 'all' || s.status === f;
+    const qOk = !q || (s.title+' '+s.tools.join(' ')+' '+s.concepts.join(' ')).toLowerCase().includes(q);
+    return fOk && qOk;
+  });
+  const dItems = filtered.filter(s => s.status !== 'upcoming');
+  const uItems = filtered.filter(s => s.status === 'upcoming');
+
+  document.getElementById('dlist').innerHTML  = dItems.map((s,i) => renderCard(s,i)).join('');
+  document.getElementById('ulist').innerHTML  = uItems.map((s,i) => renderCard(s,i)).join('');
+  document.getElementById('dlabel').style.display = dItems.length ? '' : 'none';
+  document.getElementById('ulabel').style.display = uItems.length ? '' : 'none';
+  document.getElementById('nores').style.display  = filtered.length === 0 ? '' : 'none';
+}
+
+/* ─── TOGGLE ─── */
+function toggle(h) {
+  const card = h.closest('.card');
+  if (card.classList.contains('upcoming')) return;
+  const was = card.classList.contains('is-open');
+  document.querySelectorAll('.card.is-open').forEach(c => c.classList.remove('is-open'));
+  if (!was) card.classList.add('is-open');
+}
+
+/* ─── EXPAND ALL ─── */
+let exp = false;
+document.getElementById('eab').addEventListener('click', () => {
+  exp = !exp;
+  document.querySelectorAll('.card:not(.upcoming)').forEach(c => c.classList.toggle('is-open', exp));
+  document.getElementById('eab').textContent = exp ? 'Collapse All' : 'Expand All';
+});
+
+/* ─── FILTER ─── */
+let af = 'all';
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+    c.classList.add('on'); af = c.dataset.f;
+    render(af, document.getElementById('si').value.toLowerCase());
+  });
+});
+
+/* ─── SEARCH ─── */
+document.getElementById('si').addEventListener('input', e => {
+  render(af, e.target.value.toLowerCase());
+});
+
+render();
+</script>
+</body>
+</html>
